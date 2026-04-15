@@ -4,7 +4,7 @@ test.describe('Facet Filter App E2E', () => {
   test.beforeEach(async ({ page }) => {
     // The baseURL is configured in playwright.config.ts
     // so we can use a relative path here.
-    await page.goto('/facet-filter-page/');
+    await page.goto('/');
   });
 
   test('should load products and allow filtering', async ({ page }) => {

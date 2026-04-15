@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vite Facet Filter App</title>
-  <link rel="stylesheet" href="/src/style.css">
-  <link rel="stylesheet" href="/src/theme.css">
+  <link rel="stylesheet" href="%BASE_URL%src/style.css">
+  <link rel="stylesheet" href="%BASE_URL%src/theme.css">
 </head>
 
 <body>
@@ -15,7 +15,7 @@
       <div class="level">
         <div class="level-left">
           <div class="level-item">
-            <h1 id="main-title" class="title"><a href="/facet-filter-page/">Product Showcase</a></h1>
+            <h1 id="main-title" class="title"><a href="%BASE_URL%">Product Showcase</a></h1>
           </div>
           <div class="level-item">
             <div class="field">
@@ -27,7 +27,7 @@
         </div>
         <div class="level-right">
           <div class="level-item">
-            <a href="/facet-filter-page/about.html">About</a>
+            <a href="%BASE_URL%about.html">About</a>
           </div>
           <div class="level-item">
             <div id="product-count-container" class="has-text-right"></div>
@@ -57,7 +57,7 @@
     </div>
   </section>
 
-  <script type="module" src="/src/main.ts"></script>
+  <script type="module" src="%BASE_URL%src/main.ts"></script>
 
   <template id="product-card-template">
     <div class="column is-one-third">

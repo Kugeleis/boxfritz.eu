@@ -95,7 +95,7 @@ export function applyFilters(): void {
 
   // If continuous filters are active, we must manually filter the results
   if (Object.keys(continuousFilters).length > 0) {
-    results.data.items = results.data.items.filter(item => {
+    results.data.items = results.data.items.filter((item: Record<string, unknown>) => {
       return Object.entries(continuousFilters).every(([key, range]) => {
         const value = item[key] as number;
         return value >= range[0] && value <= range[1];
@@ -168,7 +168,9 @@ export async function initializeApp(): Promise<void> {
     // --- 1. Fetch Setup Configuration ---
     // Try to load setup.local.json first, fall back to setup.json
     let setupResponse = await fetch(`${import.meta.env.BASE_URL}setup.local.json`);
-    if (!setupResponse.ok) {
+    const isJson = (response: Response) => response.headers.get('content-type')?.includes('application/json');
+
+    if (!setupResponse.ok || !isJson(setupResponse)) {
       setupResponse = await fetch(`${import.meta.env.BASE_URL}setup.json`);
     }
 
@@ -211,14 +213,14 @@ export async function initializeApp(): Promise<void> {
     ]);
 
     // --- 3. Validate Responses ---
-    if (!productsResponse.ok) {
-      throw new Error(`HTTP error! status: ${productsResponse.status}. Failed to load ${dataset}.json. Did you run the data generation script?`);
+    if (!productsResponse.ok || !isJson(productsResponse)) {
+      throw new Error(`Failed to load ${dataset}.json. Expected JSON but received ${productsResponse.headers.get('content-type') || 'unknown'}. Did you run the data generation script?`);
     }
-    if (!templateResponse.ok) {
-      throw new Error(`HTTP error! status: ${templateResponse.status}. Failed to load ${dataset}-config.json.`);
+    if (!templateResponse.ok || !isJson(templateResponse)) {
+      throw new Error(`Failed to load ${dataset}-config.json. Expected JSON but received ${templateResponse.headers.get('content-type') || 'unknown'}.`);
     }
-    if (!uiConfigResponse.ok) {
-      throw new Error(`HTTP error! status: ${uiConfigResponse.status}. Failed to load ${dataset}-ui-config.json.`);
+    if (!uiConfigResponse.ok || !isJson(uiConfigResponse)) {
+      throw new Error(`Failed to load ${dataset}-ui-config.json. Expected JSON but received ${uiConfigResponse.headers.get('content-type') || 'unknown'}.`);
     }
 
     // --- 4. Process Data ---

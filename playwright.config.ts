@@ -19,7 +19,7 @@ export default defineConfig({
   ],
   webServer: {
     command: 'npm run dev',
-    url: 'http://localhost:5173/facet-filter-page/',
+    url: 'http://localhost:5173/',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000, // Give the server plenty of time to start
   },

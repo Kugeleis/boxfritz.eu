@@ -4,8 +4,8 @@ import { vitePluginMdToHTML } from 'vite-plugin-md-to-html';
 import { resolve } from 'path';
 
 
-export default defineConfig({
-  base: '/facet-filter-page/',
+export default defineConfig(({ command }) => ({
+  base: command === 'serve' ? '/' : '/facet-filter-page/',
   define: {
     '__APP_VERSION__': JSON.stringify(process.env.npm_package_version),
   },
@@ -35,4 +35,4 @@ export default defineConfig({
       '**/e2e/**', // Exclude E2E tests from the unit test runner
     ],
   },
-});
+}));
