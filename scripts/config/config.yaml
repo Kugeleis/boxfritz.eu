@@ -1,0 +1,6 @@
+# Application Configuration
+
+# Database Configuration
+db:
+    remote:
+      table: features
