@@ -5,7 +5,7 @@ import { resolve } from 'path';
 
 
 export default defineConfig(({ command }) => ({
-  base: command === 'serve' ? '/' : '/facet-filter-page/',
+  base: command === 'serve' ? '/' : '/boxfritz.eu/',
   define: {
     '__APP_VERSION__': JSON.stringify(process.env.npm_package_version),
   },
