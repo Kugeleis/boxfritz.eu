@@ -25,23 +25,24 @@ The dataset itself is composed of three JSON files in the `public/` directory:
 
 - **Node.js and npm**: For the frontend application.
 - **[Go Task](https://taskfile.dev/)**: For running development tasks.
-- **[uv](https://docs.astral.sh/uv/)**: For managing Python scripts and dependencies.
 
 ### 1. Install Dependencies
 
-Install Node.js packages and prepare the environment:
+Install Node.js packages:
 
 ```bash
 task setup
 ```
 
-### 2. Prepare and Maintain Your Dataset
+### 2. Configure Your Dataset
 
-Data is maintained in the `scripts/` directory in CSV or YAML format. To use your own dataset (e.g., `my_products`):
+The application requires JSON files in the `public/` directory.
 
-1. Create **`scripts/my_products.csv`** (or `.yaml`): The raw product data.
-2. Create **`scripts/my_products-config.csv`**: Defines how data maps to the UI.
-3. Create **`scripts/my_products-ui-config.yaml`** (or `.csv`): Defines filter groups and types.
+#### Required JSON Files
+
+1. **`[dataset].json`**: The actual product data.
+2. **`[dataset]-config.json`**: Mapping of data properties to the UI template.
+3. **`[dataset]-ui-config.json`**: Configuration for filters and facet groups.
 
 #### Supported Filter Types
 
@@ -51,21 +52,7 @@ Data is maintained in the `scripts/` directory in CSV or YAML format. To use you
 - `continuous-single`: Single-handle slider (min or max).
 - `stepped-continuous-single`: Single-handle slider that snaps to values.
 
-### 3. Generate JSON Data
-
-The application requires JSON files. Use the provided Python scripts (via `uv`) to convert your source files:
-
-```bash
-# Generate data for the default dataset (boxen)
-task data
-
-# Generate data for a custom dataset
-task data DATA=my_products
-```
-
-This will generate the necessary `.json` files in the `public/` directory.
-
-### 4. Configure `setup.json`
+### 3. Configure `setup.json`
 
 Update `public/setup.json` to point to your dataset and customize the appearance:
 
@@ -140,13 +127,7 @@ git remote add upstream https://github.com/Kugeleis/facet-filter-page.git
 To make syncing easier, avoid modifying core template files. Instead, use these customization features:
 
 - **`public/setup.local.json`**: Create this file to override settings in `setup.json`. It is ignored by Git (via `.gitignore`'s `*.local` rule), so it won't be overwritten when you pull updates.
-- **Custom Data Filenames**: Use unique names for your data files in `scripts/` (e.g., `my-products.csv`). When generating JSON, use:
-
-  ```bash
-  task data DATA=my-products
-  ```
-
-  This avoids conflicts with the default `boxen` data.
+- **Custom Data Filenames**: Use unique names for your data files in `public/` (e.g., `my-products.json`). This avoids conflicts with the default `boxen` data.
 
 ### 4. Pulling Updates
 
