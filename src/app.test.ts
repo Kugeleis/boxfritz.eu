@@ -76,20 +76,27 @@ describe('Core Application Logic', () => {
         // Mock fetch responses
         (fetch as Mock).mockImplementation((url: string) => {
             const baseUrl = import.meta.env.BASE_URL;
+            const headers = {
+                get: vi.fn((name: string) => {
+                    if (name.toLowerCase() === 'content-type') return 'application/json';
+                    return null;
+                })
+            };
+
             if (url === `${baseUrl}setup.local.json`) {
-              return Promise.resolve({ ok: false, status: 404 });
+                return Promise.resolve({ ok: false, status: 404, headers });
             }
             if (url === `${baseUrl}setup.json`) {
-                return Promise.resolve({ ok: true, json: () => Promise.resolve({ dataset: 'products' }) });
+                return Promise.resolve({ ok: true, headers, json: () => Promise.resolve({ dataset: 'products' }) });
             }
             if (url === `${baseUrl}products.json`) {
-                return Promise.resolve({ ok: true, json: () => Promise.resolve([...mockProductData]) });
+                return Promise.resolve({ ok: true, headers, json: () => Promise.resolve([...mockProductData]) });
             }
             if (url === `${baseUrl}products-config.json`) {
-                return Promise.resolve({ ok: true, json: () => Promise.resolve([...mockTemplateConfig]) });
+                return Promise.resolve({ ok: true, headers, json: () => Promise.resolve([...mockTemplateConfig]) });
             }
             if (url === `${baseUrl}products-ui-config.json`) {
-                return Promise.resolve({ ok: true, json: () => Promise.resolve([...mockUiConfig]) });
+                return Promise.resolve({ ok: true, headers, json: () => Promise.resolve([...mockUiConfig]) });
             }
             return Promise.reject(new Error(`Unhandled fetch: ${url}`));
         });
@@ -106,19 +113,25 @@ describe('Core Application Logic', () => {
         it('should use setup.local.json if available', async () => {
             (fetch as Mock).mockImplementation((url: string) => {
                 const baseUrl = import.meta.env.BASE_URL;
+                const headers = {
+                    get: vi.fn((name: string) => {
+                        if (name.toLowerCase() === 'content-type') return 'application/json';
+                        return null;
+                    })
+                };
                 if (url === `${baseUrl}setup.local.json`) {
-                    return Promise.resolve({ ok: true, json: () => Promise.resolve({ dataset: 'local_products', title: 'Local Title' }) });
+                    return Promise.resolve({ ok: true, headers, json: () => Promise.resolve({ dataset: 'local_products', title: 'Local Title' }) });
                 }
                 if (url === `${baseUrl}local_products.json`) {
-                    return Promise.resolve({ ok: true, json: () => Promise.resolve([...mockProductData]) });
+                    return Promise.resolve({ ok: true, headers, json: () => Promise.resolve([...mockProductData]) });
                 }
                 if (url === `${baseUrl}local_products-config.json`) {
-                    return Promise.resolve({ ok: true, json: () => Promise.resolve([...mockTemplateConfig]) });
+                    return Promise.resolve({ ok: true, headers, json: () => Promise.resolve([...mockTemplateConfig]) });
                 }
                 if (url === `${baseUrl}local_products-ui-config.json`) {
-                    return Promise.resolve({ ok: true, json: () => Promise.resolve([...mockUiConfig]) });
+                    return Promise.resolve({ ok: true, headers, json: () => Promise.resolve([...mockUiConfig]) });
                 }
-                return Promise.resolve({ ok: false, status: 404 });
+                return Promise.resolve({ ok: false, status: 404, headers });
             });
 
             await appModule.initializeApp();
