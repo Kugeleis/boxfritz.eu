@@ -3,32 +3,20 @@
 version: "3"
 
 vars:
-  PY_SCRIPT: uv run scripts/convert_to_json.py
   VITE_DEV: npm run dev
   VITE_BUILD: npm run build
   NPM_INSTALL: npm install
   PUBLIC_DIR: public
-  DATA: boxen
 
 tasks:
   # ----------------------------------------------------
   # 1. SETUP AND INSTALLATION
   # ----------------------------------------------------
   setup:
-    desc: Install all Node and Python dependencies.
+    desc: Install all Node dependencies.
     cmds:
       - echo "--- Installing Node Dependencies ---"
       - "{{.NPM_INSTALL}}"
-      - echo "--- Checking Python Dependencies (Add \"pip install -r requirements.txt\" if you have one) ---"
-
-  # ----------------------------------------------------
-  # 2. DATA MANAGEMENT (Daily Update)
-  # ----------------------------------------------------
-  data:
-    desc: "Regenerate JSON data for the prefix '{{.DATA}}'."
-    cmds:
-      - echo "--- Regenerating {{.DATA}} data ---"
-      - "{{.PY_SCRIPT}} {{.DATA}} --dir scripts --output-dir {{.PUBLIC_DIR}}"
 
   check-deps:
     desc: Checks if node_modules exists and installs dependencies if missing.
@@ -43,10 +31,9 @@ tasks:
   # 2. UPDATED DEV TASK
   # ----------------------------------------------------
   dev:
-    desc: Regenerate data and start the Vite development server (with HMR).
+    desc: Start the Vite development server (with HMR).
     deps:
       - check-deps # Check dependencies first
-      - data # Ensure the latest data is present
     cmds:
       - echo "--- Starting Vite Development Server ---"
       - "{{.VITE_DEV}}"
@@ -79,9 +66,7 @@ tasks:
   # 4. DEPLOYMENT BUILD
   # ----------------------------------------------------
   build:
-    desc: Generate final optimized data and create the production build artifacts (in the \"dist\" folder).
-    deps:
-      - data # Ensure the data is fresh
+    desc: Create the production build artifacts (in the \"dist\" folder).
     cmds:
       - echo "--- Creating Production Build (Tailwind, JS, CSS optimized) ---"
       - "{{.VITE_BUILD}}"
