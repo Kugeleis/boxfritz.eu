@@ -5,24 +5,28 @@
 /* --- noUiSlider Customization to match DaisyUI --- */
 
 .noUi-target {
-  background: hsl(var(--bc) / 0.1);
+  background: var(--color-base-300);
   border: none;
   box-shadow: none;
   height: 6px;
 }
 
+.noUi-connects {
+  border-radius: 3px;
+}
+
 .noUi-connect {
-  background: hsl(var(--p));
+  background: var(--color-primary);
 }
 
 .noUi-handle {
   width: 20px;
   height: 20px;
   right: -10px;
-  top: -8px;
+  top: -7px;
   border-radius: 50%;
-  background: hsl(var(--p));
-  border: 2px solid hsl(var(--pc));
+  background: var(--color-base-100);
+  border: 2px solid var(--color-primary);
   box-shadow: 0 1px 3px rgba(0,0,0,0.2);
   cursor: pointer;
 }
