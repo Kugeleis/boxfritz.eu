@@ -1,10 +1,19 @@
-// src/main.ts
-import 'nouislider/dist/nouislider.css';
-import 'bulma-switch-control/css/main.css';
+import { createApp } from 'vue';
+import PrimeVue from 'primevue/config';
+import Aura from '@primevue/themes/aura';
+import App from './App.vue';
+import 'primeicons/primeicons.css';
 import './style.css';
-import './theme.css';
-import { initializeApp } from './app';
 
-document.addEventListener('DOMContentLoaded', () => {
-  initializeApp();
+const app = createApp(App);
+app.use(PrimeVue, {
+    theme: {
+        preset: Aura,
+        options: {
+            prefix: 'p',
+            darkModeSelector: 'system',
+            cssLayer: false
+        }
+    }
 });
+app.mount('#app');

@@ -1,48 +1,49 @@
 // src/state/index.ts
+import { ref, reactive } from 'vue';
 import type { ItemsJs } from 'itemsjs';
-import type { API as NoUiSliderAPI } from 'nouislider';
 import type { Product, Filters, TemplateMapping, UIGroup } from '../types';
 
-export let itemsjsInstance: ItemsJs<Product>;
-export let currentFilters: Filters = {};
-export let searchQuery: string = '';
-export let productData: Product[] = [];
-export let sliderInstances: Record<string, NoUiSliderAPI> = {};
-export let switchInstances: Record<string, HTMLInputElement> = {};
-export let cardTemplateMapping: TemplateMapping[] = [];
-export let uiConfig: UIGroup[] = [];
-export let noProductsMessage: string = "No products match your current filters.";
-export let allAggregations: any;
+export const itemsjsInstance = ref<ItemsJs<Product> | null>(null);
+export const currentFilters = reactive<Filters>({});
+export const searchQuery = ref<string>('');
+export const productData = ref<Product[]>([]);
+export const cardTemplateMapping = ref<TemplateMapping[]>([]);
+export const uiConfig = ref<UIGroup[]>([]);
+export const noProductsMessage = ref<string>("No products match your current filters.");
+export const allAggregations = ref<any>(null);
 
 // --- Update functions ---
 export function setItemsjsInstance(instance: ItemsJs<Product>) {
-  itemsjsInstance = instance;
+  itemsjsInstance.value = instance;
 }
 
 export function setCurrentFilters(filters: Filters) {
-  currentFilters = filters;
+  // Clear existing reactive object keys
+  Object.keys(currentFilters).forEach(key => delete currentFilters[key]);
+  // Assign new keys
+  Object.assign(currentFilters, filters);
 }
 
 export function setSearchQuery(query: string) {
-  searchQuery = query;
+  searchQuery.value = query;
 }
 
 export function setProductData(data: Product[]) {
-  productData = data;
+  productData.value = data;
 }
 
 export function setCardTemplateMapping(mapping: TemplateMapping[]) {
-  cardTemplateMapping = mapping;
+  cardTemplateMapping.value = mapping;
 }
 
 export function setUiConfig(config: UIGroup[]) {
-  uiConfig = config;
+  uiConfig.value = config;
 }
 
 export function setNoProductsMessage(message: string) {
-  noProductsMessage = message;
+  noProductsMessage.value = message;
 }
 
 export function setAllAggregations(aggregations: any) {
-  allAggregations = aggregations;
+  allAggregations.value = aggregations;
 }

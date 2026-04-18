@@ -1,13 +1,19 @@
-import aboutHtml from '../about.md';
+import { createApp } from 'vue';
+import PrimeVue from 'primevue/config';
+import Aura from '@primevue/themes/aura';
+import AboutView from './views/AboutView.vue';
+import 'primeicons/primeicons.css';
+import './style.css';
 
-document.addEventListener('DOMContentLoaded', () => {
-  const aboutContentElement = document.getElementById('about-content');
-  if (aboutContentElement) {
-    aboutContentElement.innerHTML = aboutHtml;
-  }
-
-  const appVersionElement = document.getElementById('app-version');
-  if (appVersionElement) {
-    appVersionElement.textContent = __APP_VERSION__;
-  }
+const app = createApp(AboutView);
+app.use(PrimeVue, {
+    theme: {
+        preset: Aura,
+        options: {
+            prefix: 'p',
+            darkModeSelector: 'system',
+            cssLayer: false
+        }
+    }
 });
+app.mount('#app');

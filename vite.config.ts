@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import { fileURLToPath, URL } from 'url';
 import { vitePluginMdToHTML } from 'vite-plugin-md-to-html';
 import { resolve } from 'path';
+import vue from '@vitejs/plugin-vue';
 
 
 export default defineConfig(({ command }) => ({
@@ -9,7 +10,7 @@ export default defineConfig(({ command }) => ({
   define: {
     '__APP_VERSION__': JSON.stringify(process.env.npm_package_version),
   },
-  plugins: [vitePluginMdToHTML()],
+  plugins: [vue(), vitePluginMdToHTML()],
 
   build: {
     rollupOptions: {
