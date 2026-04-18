@@ -112,10 +112,9 @@ export function applyFilters(): void {
     const total = productData.length;
     const matched = results.data.items.length;
     countContainer.innerHTML = `
-      <p class="is-size-5">
-        Showing <span class="has-text-weight-bold has-text-primary">${matched}</span>
-        of <span class="has-text-weight-bold">${total}</span> products
-      </p>
+      <span class="opacity-70">Showing </span>
+      <span class="font-bold text-primary">${matched}</span>
+      <span class="opacity-70"> of ${total} products</span>
     `;
   }
 
@@ -147,11 +146,9 @@ export async function initializeApp(): Promise<void> {
     appVersionElement.textContent = __APP_VERSION__;
   }
 
-  const modal = document.getElementById('product-modal');
-  const modalBackground = modal?.querySelector('.modal-background');
-  const modalCloseButton = modal?.querySelector('.delete');
+  const modal = document.getElementById('product-modal') as HTMLDialogElement;
 
-  if (!filterGroupsContainer || !productContainer || !mainTitleElement || !filtersLabelElement || !resetButton || !modal || !modalBackground || !modalCloseButton || !searchInput) {
+  if (!filterGroupsContainer || !productContainer || !mainTitleElement || !filtersLabelElement || !resetButton || !modal || !searchInput) {
     console.error("A required element was not found in the DOM.");
     return;
   }
@@ -161,8 +158,6 @@ export async function initializeApp(): Promise<void> {
     applyFilters();
   });
   resetButton.addEventListener('click', resetFilters);
-  modalBackground.addEventListener('click', hideProductModal);
-  modalCloseButton.addEventListener('click', hideProductModal);
 
   try {
     // --- 1. Fetch Setup Configuration ---
@@ -196,10 +191,10 @@ export async function initializeApp(): Promise<void> {
     // --- Apply Theme ---
     if (theme) {
       const style = document.createElement('style');
+      // Update Tailwind CSS variables if theme is provided
       style.textContent = `
         :root {
-          --primary-color: ${theme.primary || '#00d1b2'};
-          --link-color: ${theme.link || '#3273dc'};
+          --p: ${theme.primary || '259 94% 51%'};
         }
       `;
       document.head.appendChild(style);
@@ -254,9 +249,11 @@ export async function initializeApp(): Promise<void> {
     console.log("Unfiltered (all) items:", productData);
   } catch (error: any) {
     console.error("Fatal Error:", error.message);
-    productContainer.innerHTML = `<div role="alert">
-      <strong>Application Error!</strong>
-      <span>${error.message}</span>
+    productContainer.innerHTML = `<div class="alert alert-error shadow-lg">
+      <div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <span>Fatal Error: ${error.message}</span>
+      </div>
     </div>`;
     return;
   }
@@ -278,13 +275,13 @@ export async function initializeApp(): Promise<void> {
 
 
   uiConfig.forEach(group => {
-    const groupLabel = document.createElement('p');
-    groupLabel.className = 'menu-label';
+    const groupLabel = document.createElement('h2');
+    groupLabel.className = 'menu-label mt-4';
     groupLabel.textContent = group.groupName;
     filterGroupsContainer.appendChild(groupLabel);
 
     const menuList = document.createElement('ul');
-    menuList.className = 'menu-list';
+    menuList.className = 'menu menu-sm p-0';
     filterGroupsContainer.appendChild(menuList);
 
     group.properties.forEach(property => {

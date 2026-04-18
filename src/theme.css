@@ -1,18 +1,28 @@
 :root {
-  --primary-color: #00d1b2; /* Bulma's default turquoise */
-  --link-color: #3273dc;    /* Bulma's default blue */
+  /* DaisyUI handles most variables, but we can keep these for specific overrides if needed */
+  --primary-color: hsl(var(--p));
+  --secondary-color: hsl(var(--s));
 }
 
-/* Override Bulma's variables */
-.title {
-  color: var(--primary-color);
+/* Custom scrollbar for better polish */
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-a, .tag, .checkbox:hover {
-  color: var(--link-color);
+::-webkit-scrollbar-track {
+  background: hsl(var(--b2));
 }
 
-.tag.is-light {
-  background-color: var(--link-color);
-  color: white;
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--bc) / 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--bc) / 0.3);
+}
+
+/* Transition for all interactive elements */
+.btn, .card, .checkbox, .toggle, .input {
+  transition: all 0.2s ease-in-out;
 }

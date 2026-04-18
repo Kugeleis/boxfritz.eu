@@ -2,14 +2,17 @@ import { defineConfig } from 'vite';
 import { fileURLToPath, URL } from 'url';
 import { vitePluginMdToHTML } from 'vite-plugin-md-to-html';
 import { resolve } from 'path';
-
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig(({ command }) => ({
   base: command === 'serve' ? '/' : '/boxfritz.eu/',
   define: {
     '__APP_VERSION__': JSON.stringify(process.env.npm_package_version),
   },
-  plugins: [vitePluginMdToHTML()],
+  plugins: [
+    tailwindcss(),
+    vitePluginMdToHTML()
+  ],
 
   build: {
     rollupOptions: {

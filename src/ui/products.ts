@@ -1,44 +1,46 @@
-// src/ui/products.ts
-import type { Product, TemplateMapping } from '../types';
-import { showProductModal } from './modal';
-import { noProductsMessage } from '../state';
+import { productData } from '../state';
+import { openProductModal } from './modal';
+import type { TemplateMapping } from '../types';
 
-export function renderProductCards(products: Product[], templateMapping: TemplateMapping[]): void {
+export function renderProductCards(products: any[], templateMapping: TemplateMapping[]): void {
   const container = document.getElementById('product-list-container');
   const template = document.getElementById('product-card-template') as HTMLTemplateElement;
+  const productCountContainer = document.getElementById('product-count-container');
+
   if (!container || !template) return;
 
   container.innerHTML = '';
-
-  if (products.length === 0) {
-    container.innerHTML = `<div class="column is-full"><p class="has-text-centered">${noProductsMessage}</p></div>`;
-    return;
-  }
-
   products.forEach(product => {
-    const cardClone = template.content.cloneNode(true) as DocumentFragment;
-    const cardElement = cardClone.querySelector('.card');
+    const clone = template.content.cloneNode(true) as HTMLElement;
 
+    // Use dynamic mapping from templateConfig
     templateMapping.forEach(mapping => {
-      const element = cardClone.querySelector(`[data-template-field="${mapping.field}"]`) as HTMLElement;
-      if (element) {
-        const rawValue = product[mapping.property];
-        let displayValue = rawValue;
-
-        if (mapping.format) {
-          displayValue = mapping.format(rawValue);
+      const el = clone.querySelector(`[data-template-field="${mapping.field}"]`);
+      if (el) {
+        let val = product[mapping.property];
+        if (mapping.format && typeof mapping.format === 'function') {
+          val = mapping.format(val);
         }
 
-        element.textContent = `${mapping.prefix || ''}${displayValue}${mapping.suffix || ''}`;
+        if (mapping.field === 'price') {
+          el.textContent = `$${val.toLocaleString()}`;
+        } else {
+          el.textContent = val;
+        }
       }
     });
 
-    if (cardElement) {
-      cardElement.addEventListener('click', () => {
-        showProductModal(product);
-      });
+    const card = clone.querySelector('.card');
+    if (card) {
+      card.addEventListener('click', () => openProductModal(product));
+      // Make cursor pointer to indicate clickability
+      (card as HTMLElement).style.cursor = 'pointer';
     }
 
-    container.appendChild(cardClone);
+    container.appendChild(clone);
   });
+
+  if (productCountContainer) {
+    productCountContainer.textContent = `${products.length} of ${productData.length} products`;
+  }
 }

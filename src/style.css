@@ -1,36 +1,44 @@
-@import "bulma/css/bulma.css";
+@import "tailwindcss";
+@plugin "daisyui";
 
-/* Add a border and padding to the box to ensure it's applied */
-#filter-sidebar.box {
-  padding: 1.25rem;
-  border: 1px solid #dbdbdb;
-  border-radius: 6px;
+/* --- noUiSlider Customization to match DaisyUI --- */
+
+.noUi-target {
+  background: hsl(var(--bc) / 0.1);
+  border: none;
+  box-shadow: none;
+  height: 6px;
 }
 
-/* Custom styles for the menu to ensure correct appearance */
-#filter-sidebar .menu-label {
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 1em;
-  font-size: 11px;
-  color: #7a7a7a;
-}
-
-/* --- noUiSlider Customization --- */
-
-/* Style the connect bar (the selected range) */
 .noUi-connect {
-  background: var(--primary-color);
+  background: hsl(var(--p));
 }
 
-/* Style the handles */
 .noUi-handle {
-  border: 2px solid var(--primary-color);
-  background: #FFF;
-  box-shadow: none;
+  width: 20px;
+  height: 20px;
+  right: -10px;
+  top: -8px;
+  border-radius: 50%;
+  background: hsl(var(--p));
+  border: 2px solid hsl(var(--pc));
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  cursor: pointer;
 }
 
-/* Remove the box-shadow on focused handles for a cleaner look */
-.noUi-target.noUi-focused .noUi-handle {
-  box-shadow: none;
+.noUi-handle:before, .noUi-handle:after {
+  display: none;
+}
+
+.noUi-tooltip {
+  display: none;
+}
+
+.noUi-active .noUi-tooltip {
+  display: block;
+}
+
+/* Custom styles for sidebar */
+.menu-label {
+  @apply text-xs font-bold uppercase tracking-widest text-base-content/60 mb-2 px-4;
 }

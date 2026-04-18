@@ -1,9 +1,8 @@
 // src/ui/filters.ts
 import noUiSlider from 'nouislider';
-import type { API as NoUiSliderAPI } from 'nouislider';
-import type { UIProperty } from '../types';
 import { productData, sliderInstances, switchInstances, currentFilters, setCurrentFilters } from '../state';
 import { applyFilters, updateCategoricalFilters } from '../app';
+import type { UIProperty } from '../types';
 
 /**
  * Initializes a dual-thumb noUiSlider and links its events to applyFilters.
@@ -11,6 +10,7 @@ import { applyFilters, updateCategoricalFilters } from '../app';
 export function initializeNoUiSlider(propId: string, minVal: number, maxVal: number, parentElement: HTMLElement): void {
   const sliderDiv = document.createElement('div');
   sliderDiv.id = `slider-${propId}`;
+  sliderDiv.className = 'my-8 mx-2'; // Add margin for handles
   parentElement.appendChild(sliderDiv);
 
   const slider = noUiSlider.create(sliderDiv, {
@@ -38,7 +38,6 @@ export function initializeNoUiSlider(propId: string, minVal: number, maxVal: num
 
 /**
  * Helper to extract numeric values from product data for a given property.
- * Handles both numbers and numeric strings.
  */
 function getNumericValues(propId: string): number[] {
   return productData
@@ -56,7 +55,6 @@ function getNumericValues(propId: string): number[] {
 
 /**
  * Initializes a single-thumb noUiSlider for continuous or stepped values.
- * The behavior (less than/greater than) is determined by the property's sliderOptions.
  */
 export function initializeSingleHandleSlider(property: UIProperty, parentElement: HTMLElement): void {
   const propId = property.id;
@@ -65,6 +63,7 @@ export function initializeSingleHandleSlider(property: UIProperty, parentElement
 
   const sliderDiv = document.createElement('div');
   sliderDiv.id = `slider-${propId}`;
+  sliderDiv.className = 'my-8 mx-2';
   parentElement.appendChild(sliderDiv);
 
   let sliderConfig: any;
@@ -92,9 +91,9 @@ export function initializeSingleHandleSlider(property: UIProperty, parentElement
       start: [sliderOptions?.direction === 'less' ? uniqueValues[uniqueValues.length - 1] : uniqueValues[0]],
       range: rangeMapping,
       snap: true,
-      step: 1, // Nominal, snap is what matters
+      step: 1,
     };
-  } else { // 'continuous-single'
+  } else {
     const values = getNumericValues(propId);
     const minVal = Math.floor(Math.min(...values));
     const maxVal = Math.ceil(Math.max(...values));
@@ -106,7 +105,6 @@ export function initializeSingleHandleSlider(property: UIProperty, parentElement
     };
   }
 
-  // Common configuration. For 'greater', fill handle-to-right. For 'less', fill left-to-handle.
   sliderConfig.connect = sliderOptions?.direction === 'less' ? 'lower' : 'upper';
   sliderConfig.tooltips = true;
   sliderConfig.format = {
@@ -134,55 +132,54 @@ export function initializeSingleHandleSlider(property: UIProperty, parentElement
  */
 export function generatePropertyFilter(property: UIProperty, parentElement: HTMLElement): void {
   const propId = property.id;
-  const listItem = document.createElement('li');
+  const section = document.createElement('div');
+  section.className = 'border-t border-base-200 pt-4 mt-4';
+
+  const title = document.createElement('h3');
+  title.className = 'px-4 text-sm font-semibold mb-2 flex justify-between items-center';
+  title.textContent = property.title;
 
   if (property.type === "boolean") {
-    // For boolean, we create a flex container to align title and switch
-    const switchContainer = document.createElement('div');
-    switchContainer.className = 'is-flex is-justify-content-space-between is-align-items-center';
+    const container = document.createElement('div');
+    container.className = 'px-4';
 
-    const title = document.createElement('span');
-    title.textContent = property.title;
-    switchContainer.appendChild(title);
+    const label = document.createElement('label');
+    label.className = 'label cursor-pointer p-0 py-1';
 
-    const switchInput = document.createElement('input');
-    switchInput.id = `switch-${propId}`;
-    switchInput.type = 'checkbox';
-    switchInput.className = 'switch is-rounded';
-    switchInput.checked = false; // Start unchecked
+    const span = document.createElement('span');
+    span.className = 'label-text';
+    span.textContent = property.title;
 
-    const switchLabel = document.createElement('label');
-    switchLabel.htmlFor = switchInput.id;
-    switchContainer.appendChild(switchInput);
-    switchContainer.appendChild(switchLabel);
+    const checkbox = document.createElement('input');
+    checkbox.id = `switch-${propId}`;
+    checkbox.type = 'checkbox';
+    checkbox.className = 'toggle toggle-primary toggle-sm';
 
-    // Store the instance for reset functionality
-    switchInstances[propId] = switchInput;
+    label.appendChild(span);
+    label.appendChild(checkbox);
+    container.appendChild(label);
+    section.appendChild(container);
 
-    switchInput.addEventListener('change', () => {
+    switchInstances[propId] = checkbox;
+
+    checkbox.addEventListener('change', () => {
       const newFilters = { ...currentFilters };
-      if (switchInput.checked) {
-        // When checked, we filter for items where the value is 1
+      if (checkbox.checked) {
         newFilters[propId] = [1, 1];
       } else {
-        // When unchecked, remove the filter
         delete newFilters[propId];
       }
       setCurrentFilters(newFilters);
       applyFilters();
     });
-
-    listItem.appendChild(switchContainer);
   } else {
-    // For all other types, keep the existing structure
-    const titleLink = document.createElement('a');
-    titleLink.textContent = property.title;
-    listItem.appendChild(titleLink);
+    section.appendChild(title);
 
     if (property.type === "categorical") {
       const facetContainer = document.createElement('ul');
       facetContainer.id = `facet-container-${propId}`;
-      listItem.appendChild(facetContainer);
+      facetContainer.className = 'menu menu-sm p-0';
+      section.appendChild(facetContainer);
 
       facetContainer.addEventListener('change', (e: Event) => {
         const target = e.target as HTMLInputElement;
@@ -190,21 +187,21 @@ export function generatePropertyFilter(property: UIProperty, parentElement: HTML
           updateCategoricalFilters(propId, target.value, target.checked);
         }
       });
-    } else if (property.type === "continuous") {
+    } else {
       const sliderWrapper = document.createElement('div');
-      sliderWrapper.style.padding = '0.75em';
-      const values = getNumericValues(propId);
-      const minVal = Math.floor(Math.min(...values));
-      const maxVal = Math.ceil(Math.max(...values));
-      initializeNoUiSlider(propId, minVal, maxVal, sliderWrapper);
-      listItem.appendChild(sliderWrapper);
-    } else if (property.type === "stepped-continuous-single" || property.type === "continuous-single") {
-      const sliderWrapper = document.createElement('div');
-      sliderWrapper.style.padding = '0.75em';
-      initializeSingleHandleSlider(property, sliderWrapper);
-      listItem.appendChild(sliderWrapper);
+      sliderWrapper.className = 'px-6 py-2';
+
+      if (property.type === "continuous") {
+        const values = getNumericValues(propId);
+        const minVal = Math.floor(Math.min(...values));
+        const maxVal = Math.ceil(Math.max(...values));
+        initializeNoUiSlider(propId, minVal, maxVal, sliderWrapper);
+      } else if (property.type === "stepped-continuous-single" || property.type === "continuous-single") {
+        initializeSingleHandleSlider(property, sliderWrapper);
+      }
+      section.appendChild(sliderWrapper);
     }
   }
 
-  parentElement.appendChild(listItem);
+  parentElement.appendChild(section);
 }

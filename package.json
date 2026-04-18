@@ -16,17 +16,20 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.55.1",
+    "@tailwindcss/vite": "^4.2.2",
     "@types/node": "^24.6.2",
     "@types/nouislider": "^9.0.10",
+    "autoprefixer": "^10.5.0",
+    "daisyui": "^5.5.19",
     "jsdom": "^27.0.0",
+    "postcss": "^8.5.10",
+    "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3",
     "vite": "^7.1.9",
     "vite-plugin-md-to-html": "^0.0.18",
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "bulma": "^1.0.4",
-    "bulma-switch-control": "^1.2.2",
     "itemsjs": "^2.1.25",
     "nouislider": "^15.8.1"
   }

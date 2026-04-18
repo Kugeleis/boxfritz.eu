@@ -12,13 +12,14 @@ export function renderFacets(buckets: any[], propId: string): void {
     if (facetValue.doc_count > 0) {
       const isChecked = currentFilters[propId] && (currentFilters[propId] as CategoricalFilter).includes(facetValue.key);
       html += `
-        <li>
-          <label class="checkbox">
+        <li class="px-4 py-1">
+          <label class="label cursor-pointer flex justify-start gap-3 p-0">
             <input type="checkbox"
                    value="${facetValue.key}"
+                   class="checkbox checkbox-primary checkbox-sm"
                    ${isChecked ? 'checked' : ''}>
-            ${facetValue.key}
-            <span class="tag is-outlined is-rounded ml-2">${facetValue.doc_count}</span>
+            <span class="label-text flex-1">${facetValue.key}</span>
+            <span class="badge badge-sm badge-ghost opacity-70">${facetValue.doc_count}</span>
           </label>
         </li>
       `;
