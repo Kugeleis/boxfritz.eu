@@ -10,4 +10,16 @@ document.addEventListener('DOMContentLoaded', () => {
   if (appVersionElement) {
     appVersionElement.textContent = __APP_VERSION__;
   }
+
+  const themeToggle = document.getElementById('theme-toggle') as HTMLInputElement;
+  if (themeToggle) {
+    themeToggle.checked = document.documentElement.getAttribute('data-theme') === 'dark';
+
+    themeToggle.addEventListener('change', (e) => {
+      const isDark = (e.target as HTMLInputElement).checked;
+      const theme = isDark ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+    });
+  }
 });

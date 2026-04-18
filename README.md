@@ -1,6 +1,6 @@
 # Data-Agnostic Facet Filter Page (Developer Documentation)
 
-This repository contains a highly configurable, data-agnostic single-page application that demonstrates a faceted product filtering system. It is built with Vite, TypeScript, and Bulma, and it uses `itemsjs` for efficient client-side filtering.
+This repository contains a highly configurable, data-agnostic single-page application that demonstrates a faceted product filtering system. It is built with Vite, TypeScript, and DaisyUI (Tailwind CSS), and it uses `itemsjs` for efficient client-side filtering.
 
 This document is intended for developers who want to set up, maintain, or extend the application. For a high-level overview of features, please see the [About Page](about.html).
 
@@ -136,6 +136,37 @@ When you want to sync with the latest template changes:
 ```bash
 git fetch upstream
 git merge upstream/main
+```
+
+## Styling and Theming (Developer Guide)
+
+The project uses **Tailwind CSS v4** and **DaisyUI v5** for styling.
+
+### Basic Styling with DaisyUI
+
+DaisyUI provides a set of semantic component classes (like `btn`, `card`, `input`) and color names (like `primary`, `secondary`, `accent`, `neutral`).
+
+- **Colors**: You can apply colors using Tailwind utility classes:
+  - Text: `text-primary`, `text-secondary`, `text-base-content`
+  - Background: `bg-primary`, `bg-base-100` (cards), `bg-base-200` (page backgrounds)
+  - Buttons: `btn-primary`, `btn-outline btn-secondary`
+
+### Dark Mode and Themes
+
+The application supports dark mode via the `theme-controller` in the navbar. DaisyUI uses the `data-theme` attribute on the `<html>` tag to switch themes.
+
+### Customizing the Theme
+
+You can customize the theme colors in `public/setup.json`. These values are applied dynamically to the CSS variables used by DaisyUI.
+
+### Typography
+
+For Markdown content (like the About page), we use the `@tailwindcss/typography` plugin. Wrap your content in a container with the `prose` class to apply beautiful default styles:
+
+```html
+<div class="prose">
+  <!-- Markdown content here -->
+</div>
 ```
 
 ## Repository

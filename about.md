@@ -27,7 +27,7 @@ The application is designed to be maintained without touching the source code:
 
 ## Open Source
 
-This project is open-source and built using modern web technologies like **Vite**, **TypeScript**, **Bulma**, and **itemsjs**.
+This project is open-source and built using modern web technologies like **Vite**, **TypeScript**, **Tailwind CSS**, **DaisyUI**, and **itemsjs**.
 
 The source code is available on GitHub: [https://github.com/Kugeleis/facet-filter-page](https://github.com/Kugeleis/facet-filter-page)
 
